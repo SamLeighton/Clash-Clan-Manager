@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>selectionFunction</class>
+ <widget class="QMainWindow" name="selectionFunction">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1070</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="background_image">
+    <property name="geometry">
+     <rect>
+      <x>-10</x>
+      <y>0</y>
+      <width>1081</width>
+      <height>741</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/titleScreen/background image.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="logout_button">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>10</y>
+      <width>231</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Supercell-Magic</family>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	background-color: rgb(255, 62, 3);
+	color: white;
+	border-color: rgb(255, 255, 255);
+	border-radius: 6;
+	border-style: outset;
+	border-width: 1;
+	border-top-color: rgb(135, 135, 135);
+	border-left-color: rgb(135, 135, 135);
+	border-right-color: rgb(0, 0, 0);
+	border-bottom-color: rgb(0, 0, 0);
+}
+
+QPushButton:pressed {
+	border-style: outset;
+	border-top-color: rgb(0, 0, 0);
+	border-left-color: rgb(0, 0, 0);
+	border-right-color: rgb(135, 135, 135);
+	border-bottom-color: rgb(135, 135, 135);
+	
+}
+</string>
+    </property>
+    <property name="text">
+     <string>LOG OUT: sam</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="change_clan_button">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>10</y>
+      <width>231</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Supercell-Magic</family>
+      <pointsize>8</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	
+	background-color: qlineargradient(spread:pad, x1:0.0511364, y1:0.5, x2:0.938, y2:0.534091, stop:0 rgba(231, 163, 4, 255), stop:1 rgba(238, 211, 4, 255));
+	color: white;
+ 	border-radius: 6; 
+	padding: 6; 
+	border-style: outset;
+	border-width: 1;
+	border-top-color: rgb(135, 135, 135);
+	border-left-color: rgb(135, 135, 135);
+	border-right-color: rgb(0, 0, 0);
+	border-bottom-color: rgb(0, 0, 0);
+	
+}
+
+QPushButton:pressed {
+	border-style: outset;
+	border-top-color: rgb(0, 0, 0);
+	border-left-color: rgb(0, 0, 0);
+	border-right-color: rgb(135, 135, 135);
+	border-bottom-color: rgb(135, 135, 135);
+	
+}</string>
+    </property>
+    <property name="text">
+     <string>CHANGE CLAN</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="clan_shield">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>141</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="clan_name">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>60</y>
+      <width>601</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Supercell-Magic</family>
+      <pointsize>26</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="members_button">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>230</y>
+      <width>501</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Supercell-Magic</family>
+      <pointsize>18</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	
+	background-color: qlineargradient(spread:pad, x1:0.0511364, y1:0.5, x2:0.938, y2:0.534091, stop:0 rgba(231, 163, 4, 255), stop:1 rgba(238, 211, 4, 255));
+	color: white;
+ 	border-radius: 6; 
+	padding: 6; 
+	border-style: outset;
+	border-width: 1;
+	border-top-color: rgb(135, 135, 135);
+	border-left-color: rgb(135, 135, 135);
+	border-right-color: rgb(0, 0, 0);
+	border-bottom-color: rgb(0, 0, 0);
+	
+}
+
+QPushButton:pressed {
+	border-style: outset;
+	border-top-color: rgb(0, 0, 0);
+	border-left-color: rgb(0, 0, 0);
+	border-right-color: rgb(135, 135, 135);
+	border-bottom-color: rgb(135, 135, 135);
+	
+}</string>
+    </property>
+    <property name="text">
+     <string>Member Information</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="war_button">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>340</y>
+      <width>501</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Supercell-Magic</family>
+      <pointsize>18</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	
+	background-color: qlineargradient(spread:pad, x1:0.0511364, y1:0.5, x2:0.938, y2:0.534091, stop:0 rgba(231, 163, 4, 255), stop:1 rgba(238, 211, 4, 255));
+	color: white;
+ 	border-radius: 6; 
+	padding: 6; 
+	border-style: outset;
+	border-width: 1;
+	border-top-color: rgb(135, 135, 135);
+	border-left-color: rgb(135, 135, 135);
+	border-right-color: rgb(0, 0, 0);
+	border-bottom-color: rgb(0, 0, 0);
+	
+}
+
+QPushButton:pressed {
+	border-style: outset;
+	border-top-color: rgb(0, 0, 0);
+	border-left-color: rgb(0, 0, 0);
+	border-right-color: rgb(135, 135, 135);
+	border-bottom-color: rgb(135, 135, 135);
+	
+}</string>
+    </property>
+    <property name="text">
+     <string>Clan Wars / CWL</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="event_button">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>450</y>
+      <width>501</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Supercell-Magic</family>
+      <pointsize>18</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	
+	background-color: qlineargradient(spread:pad, x1:0.0511364, y1:0.5, x2:0.938, y2:0.534091, stop:0 rgba(231, 163, 4, 255), stop:1 rgba(238, 211, 4, 255));
+	color: white;
+ 	border-radius: 6; 
+	padding: 6; 
+	border-style: outset;
+	border-width: 1;
+	border-top-color: rgb(135, 135, 135);
+	border-left-color: rgb(135, 135, 135);
+	border-right-color: rgb(0, 0, 0);
+	border-bottom-color: rgb(0, 0, 0);
+	
+}
+
+QPushButton:pressed {
+	border-style: outset;
+	border-top-color: rgb(0, 0, 0);
+	border-left-color: rgb(0, 0, 0);
+	border-right-color: rgb(135, 135, 135);
+	border-bottom-color: rgb(135, 135, 135);
+	
+}</string>
+    </property>
+    <property name="text">
+     <string>Event Calendar</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="function_description">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>70</y>
+      <width>471</width>
+      <height>611</height>
+     </rect>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTextEdit {
+	border: 2px solid gray;
+	border-color: #424242;
+	border-radius: 15px;
+	background-color: white
+}</string>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="html">
+     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>701</y>
+      <width>1071</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QProgressBar {
+	text-align: center;
+}
+
+QProgressBar::chunk:horizontal {
+	background-color: rgb(255, 202, 8);
+}</string>
+    </property>
+    <property name="value">
+     <number>98</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="filler_label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1071</width>
+      <height>721</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="Game Graphics/source.qrc"/>
+ </resources>
+ <connections/>
+</ui>

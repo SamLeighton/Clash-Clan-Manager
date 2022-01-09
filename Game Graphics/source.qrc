@@ -1,0 +1,58 @@
+<RCC>
+  <qresource prefix="titleScreen">
+    <file>CCM logo circle.png</file>
+    <file>closebutton.png</file>
+    <file>clash clan manager text.png</file>
+    <file>background image.png</file>
+  </qresource>
+  <qresource prefix="addClan">
+    <file>confirmtick.png</file>
+    <file>delete.png</file>
+    <file>background image.png</file>
+    <file>clanimage.png</file>
+  </qresource>
+  <qresource prefix="selectFunction">
+    <file>clanimage.png</file>
+  </qresource>
+  <qresource prefix="members">
+    <file>greenwarshield.png</file>
+    <file>redwarshield.png</file>
+    <file>bronze.png</file>
+    <file>champion.png</file>
+    <file>crystal.png</file>
+    <file>gold.png</file>
+    <file>legend.png</file>
+    <file>master.png</file>
+    <file>silver.png</file>
+    <file>titan.png</file>
+    <file>unranked.png</file>
+    <file>heroes.png</file>
+    <file>donationratio.png</file>
+    <file>donationsgiven.png</file>
+    <file>donationsreceived.png</file>
+    <file>warshieldstar.png</file>
+    <file>star.png</file>
+    <file>warshield.png</file>
+    <file>titans.png</file>
+    <file>trophy.png</file>
+    <file>exp.png</file>
+    <file>townhall1.png</file>
+    <file>townhall2.png</file>
+    <file>townhall3.png</file>
+    <file>townhall4.png</file>
+    <file>townhall5.png</file>
+    <file>townhall6.png</file>
+    <file>townhall7.png</file>
+    <file>townhall8.png</file>
+    <file>townhall9.png</file>
+    <file>townhall10.png</file>
+    <file>townhall11.png</file>
+    <file>townhall12.png</file>
+    <file>townhall13.png</file>
+    <file>townhall14.png</file>
+  </qresource>
+  <qresource prefix="warCwl">
+    <file>info button.png</file>
+    <file>swords.png</file>
+  </qresource>
+</RCC>
