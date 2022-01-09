@@ -218,11 +218,6 @@ class AddClanScreen(QtWidgets.QMainWindow):
         self.ui.confirm_3.clicked.connect(lambda: self.select_clan(3))
         self.ui.confirm_4.clicked.connect(lambda: self.select_clan(4))
 
-        #blur background
-        #background_effect = QtWidgets.QGraphicsBlurEffect(self.ui.background_image)
-        #background_effect.setBlurRadius(1.5)
-        #self.ui.background_image.setGraphicsEffect(background_effect)
-
         #logout
         self.ui.logout_button.clicked.connect(self.logout)
 
@@ -669,11 +664,6 @@ class selectionFunctionScreen(QtWidgets.QMainWindow):
 
         #hide progresbar text
         self.ui.progressBar.setTextVisible(False)
-
-        #blur background
-        #background_effect = QtWidgets.QGraphicsBlurEffect(self.ui.background_image)
-        #background_effect.setBlurRadius(1.5)
-        #self.ui.background_image.setGraphicsEffect(background_effect)
 
         #clan name dropshadow
         dropshadow_effect = QtWidgets.QGraphicsDropShadowEffect(self.ui.clan_name)
