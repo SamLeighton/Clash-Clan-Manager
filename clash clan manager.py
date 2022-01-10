@@ -16,6 +16,7 @@ from datetime import datetime, timedelta, timezone, tzinfo
 import pytz
 from dateutil import parser
 import concurrent.futures
+import webbrowser
 
 from PIL import *
 from PIL.ImageQt import ImageQt, QPixmap
@@ -39,11 +40,20 @@ firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
 db = firebase.database()
 
+application_version = 'beta-1.0'
+recent_application_version = db.child('recent_application_version').get().val()
+
 class TitleScreen(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        if application_version != recent_application_version:
+            self.show_information('update')
+        else:
+            self.ui.information_box.hide()
+
 
         self.intro_animation()
 
@@ -82,6 +92,32 @@ class TitleScreen(QtWidgets.QMainWindow):
         self.ui.signup_failed_in_use.hide()
         self.ui.signup_failed_password.hide()
         self.ui.signup_failed_username.hide()
+    
+    def show_information(self, type):
+        self.ui.information_box.show()
+
+        title = db.child('latest_update_message').child(type).child('title').get().val()
+        body = db.child('latest_update_message').child(type).child('body').get().val()
+
+        self.ui.information_title.setText(title)
+        self.ui.information_body.setText(body)
+
+        path = os.path.dirname(os.path.abspath(__file__))
+        self.ui.information_image.setPixmap(QtGui.QPixmap(path + '/Game Graphics/CCM logo circle.png'))
+        self.ui.information_image.setScaledContents(True)
+        
+        if type == 'update':
+            def open_link():
+                webbrowser.open('https://clashofclans.com/')
+
+            self.ui.information_button.setText('UPDATE')
+            self.ui.information_button.clicked.connect(open_link)
+        else:
+            def close_box():
+                self.ui.information_box.hide()
+            self.ui.information_button.setText('CLOSE')
+            self.ui.information_button.clicked.connect(close_box)
+        
 
     def login_verification(self):
         global username
@@ -134,7 +170,7 @@ class TitleScreen(QtWidgets.QMainWindow):
         self.ui.sign_up_button.setGraphicsEffect(signup_opacity_effect)
 
         #title animations
-        title_geometry_animation = QtCore.QPropertyAnimation(self.ui.title_image, b'geometry', duration=1000, startValue=QtCore.QRect(190, -60, 671, 261), endValue=QtCore.QRect(190, 0, 671, 261))
+        title_geometry_animation = QtCore.QPropertyAnimation(self.ui.title_image, b'geometry', duration=1000, startValue=QtCore.QRect(170, -60, 691, 351), endValue=QtCore.QRect(170, -20, 691, 351))
         title_opacity_animation = QtCore.QPropertyAnimation(title_opacity_effect, b'opacity', duration=1000, startValue=0, endValue=1)
 
         #button animations

@@ -828,11 +828,177 @@ QPushButton:pressed {
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QGroupBox" name="information_box">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>250</y>
+      <width>761</width>
+      <height>421</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox {
+border: 2px solid gray;
+border-color: #424242;
+border-radius: 15px;
+background-color: white
+}</string>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="information_title">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>741</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Supercell-Magic</family>
+       <pointsize>20</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Title</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="information_body">
+     <property name="geometry">
+      <rect>
+       <x>13</x>
+       <y>80</y>
+       <width>481</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(222, 222, 222);
+border-radius: 7;
+border: 2px solid black;
+border-color: #424242;
+</string>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="markdown">
+      <string/>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Calibri'; font-size:12pt; font-weight:600; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="information_button">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>330</y>
+       <width>381</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Supercell-Magic</family>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <italic>false</italic>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+	background-color: qlineargradient(spread:pad, x1:0.057, y1:0.488636, x2:0.920455, y2:0.489, stop:0 rgba(144, 0, 14, 255), stop:0.988636 rgba(255, 0, 4, 255));
+	color: white;
+ 	border-radius: 10; 
+	padding: 6; 
+	border-style: outset;
+	border-width: 1;
+	border-top-color: rgb(135, 135, 135);
+	border-left-color: rgb(135, 135, 135);
+	border-right-color: rgb(0, 0, 0);
+	border-bottom-color: rgb(0, 0, 0);
+	
+}
+
+QPushButton:pressed {
+	border-style: outset;
+	border-top-color: rgb(0, 0, 0);
+	border-left-color: rgb(0, 0, 0);
+	border-right-color: rgb(135, 135, 135);
+	border-bottom-color: rgb(135, 135, 135);
+	
+}</string>
+     </property>
+     <property name="text">
+      <string>BUTTON FUNCTION</string>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="information_image">
+     <property name="geometry">
+      <rect>
+       <x>506</x>
+       <y>80</y>
+       <width>231</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 2px solid gray;
+border-color: #424242;
+border-radius: 15px;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
    <zorder>title_image</zorder>
    <zorder>log_in_button</zorder>
    <zorder>sign_up_button</zorder>
    <zorder>signup_form</zorder>
    <zorder>login_form</zorder>
+   <zorder>information_box</zorder>
   </widget>
  </widget>
  <resources>

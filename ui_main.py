@@ -419,11 +419,93 @@ class Ui_MainWindow(object):
         self.sign_up_button.setDefault(False)
         self.sign_up_button.setFlat(False)
         self.sign_up_button.setObjectName("sign_up_button")
+        self.information_box = QtWidgets.QGroupBox(self.centralwidget)
+        self.information_box.setGeometry(QtCore.QRect(140, 250, 761, 421))
+        self.information_box.setAutoFillBackground(False)
+        self.information_box.setStyleSheet("QGroupBox {\n"
+"border: 2px solid gray;\n"
+"border-color: #424242;\n"
+"border-radius: 15px;\n"
+"background-color: white\n"
+"}")
+        self.information_box.setTitle("")
+        self.information_box.setObjectName("information_box")
+        self.information_title = QtWidgets.QLabel(self.information_box)
+        self.information_title.setGeometry(QtCore.QRect(10, 20, 741, 41))
+        font = QtGui.QFont()
+        font.setFamily("Supercell-Magic")
+        font.setPointSize(20)
+        font.setBold(True)
+        font.setWeight(75)
+        self.information_title.setFont(font)
+        self.information_title.setObjectName("information_title")
+        self.information_body = QtWidgets.QTextEdit(self.information_box)
+        self.information_body.setGeometry(QtCore.QRect(13, 80, 481, 231))
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.information_body.setFont(font)
+        self.information_body.setStyleSheet("background-color: rgb(222, 222, 222);\n"
+"border-radius: 7;\n"
+"border: 2px solid black;\n"
+"border-color: #424242;\n"
+"")
+        self.information_body.setReadOnly(True)
+        self.information_body.setMarkdown("")
+        self.information_body.setObjectName("information_body")
+        self.information_button = QtWidgets.QPushButton(self.information_box)
+        self.information_button.setGeometry(QtCore.QRect(170, 330, 381, 81))
+        font = QtGui.QFont()
+        font.setFamily("Supercell-Magic")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setItalic(False)
+        font.setWeight(75)
+        self.information_button.setFont(font)
+        self.information_button.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.information_button.setAutoFillBackground(False)
+        self.information_button.setStyleSheet("QPushButton {\n"
+"    background-color: qlineargradient(spread:pad, x1:0.057, y1:0.488636, x2:0.920455, y2:0.489, stop:0 rgba(144, 0, 14, 255), stop:0.988636 rgba(255, 0, 4, 255));\n"
+"    color: white;\n"
+"     border-radius: 10; \n"
+"    padding: 6; \n"
+"    border-style: outset;\n"
+"    border-width: 1;\n"
+"    border-top-color: rgb(135, 135, 135);\n"
+"    border-left-color: rgb(135, 135, 135);\n"
+"    border-right-color: rgb(0, 0, 0);\n"
+"    border-bottom-color: rgb(0, 0, 0);\n"
+"    \n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border-style: outset;\n"
+"    border-top-color: rgb(0, 0, 0);\n"
+"    border-left-color: rgb(0, 0, 0);\n"
+"    border-right-color: rgb(135, 135, 135);\n"
+"    border-bottom-color: rgb(135, 135, 135);\n"
+"    \n"
+"}")
+        self.information_button.setCheckable(False)
+        self.information_button.setChecked(False)
+        self.information_button.setDefault(False)
+        self.information_button.setFlat(False)
+        self.information_button.setObjectName("information_button")
+        self.information_image = QtWidgets.QLabel(self.information_box)
+        self.information_image.setGeometry(QtCore.QRect(506, 80, 231, 231))
+        self.information_image.setStyleSheet("border: 2px solid gray;\n"
+"border-color: #424242;\n"
+"border-radius: 15px;")
+        self.information_image.setText("")
+        self.information_image.setObjectName("information_image")
         self.title_image.raise_()
         self.log_in_button.raise_()
         self.sign_up_button.raise_()
         self.signup_form.raise_()
         self.login_form.raise_()
+        self.information_box.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -451,6 +533,13 @@ class Ui_MainWindow(object):
         self.signup_failed_password.setText(_translate("MainWindow", "Password must be more than 6 characters!"))
         self.signup_failed_username.setText(_translate("MainWindow", "Username must be less than 16 characters!"))
         self.sign_up_button.setText(_translate("MainWindow", "SIGN UP"))
+        self.information_title.setText(_translate("MainWindow", "Title"))
+        self.information_body.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Calibri\'; font-size:12pt; font-weight:600; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.information_button.setText(_translate("MainWindow", "BUTTON FUNCTION"))
 import source
 
 
