@@ -51,9 +51,18 @@ class TitleScreen(QtWidgets.QMainWindow):
 
         if application_version != recent_application_version:
             self.show_information('update')
+        elif bool(db.child('latest_update_message').child('general').child('status').get().val()) == True:
+            try:
+                with open('cache.txt', 'r') as file:
+                    cached_date = file.readlines()[0]
+                    if cached_date != db.child('latest_update_message').child('general').child('message_date').get().val():
+                        self.show_information('general')
+                    else:
+                        self.ui.information_box.hide()
+            except:
+                self.show_information('general')
         else:
             self.ui.information_box.hide()
-
 
         self.intro_animation()
 
@@ -96,6 +105,8 @@ class TitleScreen(QtWidgets.QMainWindow):
     def show_information(self, type):
         self.ui.information_box.show()
 
+        latest_date = db.child('latest_update_message').child('general').child('message_date').get().val()
+
         title = db.child('latest_update_message').child(type).child('title').get().val()
         body = db.child('latest_update_message').child(type).child('body').get().val()
 
@@ -115,6 +126,9 @@ class TitleScreen(QtWidgets.QMainWindow):
         else:
             def close_box():
                 self.ui.information_box.hide()
+
+                with open('cache.txt', 'w') as file:
+                    file.write(latest_date)
             self.ui.information_button.setText('CLOSE')
             self.ui.information_button.clicked.connect(close_box)
         
