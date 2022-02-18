@@ -281,7 +281,7 @@ class Ui_cwl_war(object):
         self.more_details_scrollArea.setWidgetResizable(True)
         self.more_details_scrollArea.setObjectName("more_details_scrollArea")
         self.more_details_scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.more_details_scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -695, 750, 3153))
+        self.more_details_scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 750, 3153))
         self.more_details_scrollAreaWidgetContents.setStyleSheet("QWidget {\n"
 "    background-color: white;\n"
 "    border: 0px;\n"
@@ -15264,7 +15264,7 @@ class Ui_cwl_war(object):
         self.participant_information_box_close_button.setIconSize(QtCore.QSize(40, 40))
         self.participant_information_box_close_button.setObjectName("participant_information_box_close_button")
         self.average_stars = QtWidgets.QLabel(self.participant_information_box)
-        self.average_stars.setGeometry(QtCore.QRect(317, 55, 191, 16))
+        self.average_stars.setGeometry(QtCore.QRect(317, 55, 301, 16))
         font = QtGui.QFont()
         font.setFamily("Supercell-Magic")
         font.setPointSize(9)
@@ -15273,7 +15273,7 @@ class Ui_cwl_war(object):
         self.average_stars.setFont(font)
         self.average_stars.setObjectName("average_stars")
         self.average_percent = QtWidgets.QLabel(self.participant_information_box)
-        self.average_percent.setGeometry(QtCore.QRect(317, 75, 211, 16))
+        self.average_percent.setGeometry(QtCore.QRect(317, 75, 301, 16))
         font = QtGui.QFont()
         font.setFamily("Supercell-Magic")
         font.setPointSize(9)

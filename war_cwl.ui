@@ -583,7 +583,7 @@ QPushButton:pressed {
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-134</y>
+          <y>0</y>
           <width>750</width>
           <height>3153</height>
          </rect>
@@ -36453,13 +36453,13 @@ border: 0px;</string>
     <zorder>attack_2_not_found</zorder>
     <zorder>db_info_not_found</zorder>
    </widget>
-   <zorder>participant_information_box</zorder>
-   <zorder>current_war_more_details_box</zorder>
-   <zorder>details_header</zorder>
    <zorder>background_image</zorder>
    <zorder>back_button</zorder>
    <zorder>logout_button</zorder>
    <zorder>current_war_box</zorder>
+   <zorder>current_war_more_details_box</zorder>
+   <zorder>details_header</zorder>
+   <zorder>participant_information_box</zorder>
   </widget>
  </widget>
  <resources>

@@ -17,6 +17,7 @@ import pytz
 from dateutil import parser
 import concurrent.futures
 import webbrowser
+import mysql.connector
 
 from PIL import *
 from PIL.ImageQt import ImageQt, QPixmap
@@ -29,12 +30,15 @@ from add_clan import Ui_addClan
 from selection_function import Ui_selectionFunction
 from members import Ui_members
 from war_cwl import Ui_cwl_war
-from headers import headers, firebase_config
+from headers import headers, firebase_config, mysql_info
 
 username = ''
 email = ''
 clan_name = ''
 loop_closed = False
+
+mysql_db = mysql.connector.connect(host = mysql_info['host'], user = mysql_info['user'], passwd = mysql_info['password'], database = mysql_info['database'])
+cursor = mysql_db.cursor()
 
 firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
@@ -142,7 +146,10 @@ class TitleScreen(QtWidgets.QMainWindow):
 
         try:
             auth.sign_in_with_email_and_password(email, password)
-            username = db.child('accounts').child(email.replace('.', '')).get().val()['username']
+
+            cursor.execute(f"SELECT username FROM users WHERE email = '{email}'")
+            for user in cursor:
+                username = user[0]
 
             stacked_widget.setCurrentIndex(stacked_widget.currentIndex() + 1)
             screen2.set_logout_name()
@@ -208,9 +215,8 @@ class TitleScreen(QtWidgets.QMainWindow):
                 if len(password) >= 6:
                     try:
                         auth.create_user_with_email_and_password(email, password)
-
-                        data = {'username': username}
-                        db.child('accounts').child(email.replace('.', '')).set(data)
+                        cursor.execute(f"INSERT INTO users (email, username) VALUES ('{email}', '{username}')")
+                        mysql_db.commit()
 
                         self.ui.username_entry.setText('')
                         self.ui.password_entry.setText('')
@@ -307,7 +313,18 @@ class AddClanScreen(QtWidgets.QMainWindow):
     def select_clan(self, clan_number):
         global clan_name
 
-        clan_name = db.child('accounts').child(email.replace('.', '')).child('saved clans').child('savedclan' + str(clan_number)).child('tag').get().val()
+        cursor.execute("SELECT c.tag FROM users u "
+                        "JOIN user_clans "
+                            "USING (user_id) "
+                        "JOIN clans c "
+                            "USING(clan_id) "
+                        f"WHERE email = '{email}' "
+                        "ORDER BY c.name "
+                        f"LIMIT 1 OFFSET {clan_number}")
+        
+        for clan in cursor:
+            clan_name = clan[0].lstrip('#')
+
         screen3.set_clan()
 
         stacked_widget.setCurrentIndex(stacked_widget.currentIndex() + 1)
@@ -377,202 +394,170 @@ class AddClanScreen(QtWidgets.QMainWindow):
 
     def load_clans(self):
 
-        def load_clan_0():
-            try:
-                clan_0 = db.child('accounts').child(email.replace('.', '')).child('saved clans').child('savedclan0').child('tag').get().val()
+        def load_clan_0(clan_0):
+            clan_0_response = requests.get(f'https://cocproxy.royaleapi.dev/v1/clans/%23{clan_0.lstrip("#")}', headers = headers)
+            if clan_0_response.status_code == 200:
+                clan_0_json = clan_0_response.json()
 
-                clan_0_response = requests.get('https://cocproxy.royaleapi.dev/v1/clans/%23' + clan_0, headers = headers)
-                if clan_0_response.status_code == 200:
-                    clan_0_json = clan_0_response.json()
+                self.ui.clan_name_0.setText(clan_0_json['name'])
+                self.ui.delete_0.show()
+                self.ui.confirm_0.show()
 
-                    self.ui.clan_name_0.setText(clan_0_json['name'])
-                    self.ui.delete_0.show()
-                    self.ui.confirm_0.show()
+                image_0_response = requests.get(clan_0_json['badgeUrls']['large'])
 
-                    image_0_response = requests.get(clan_0_json['badgeUrls']['large'])
+            if image_0_response.status_code == 200:
+                image_bytes = io.BytesIO(image_0_response.content)
+                img = Image.open(image_bytes)
+                qimage = ImageQt(img)
 
-                if image_0_response.status_code == 200:
-                    image_bytes = io.BytesIO(image_0_response.content)
-                    img = Image.open(image_bytes)
-                    qimage = ImageQt(img)
+                self.ui.clan_shield_0.setPixmap(QtGui.QPixmap.fromImage(qimage))
+            else:
+                pass
 
-                    self.ui.clan_shield_0.setPixmap(QtGui.QPixmap.fromImage(qimage))
-                else:
-                    pass
-            except:
-                self.ui.clan_name_0.setText('')
-                self.ui.clan_shield_0.setPixmap(QtGui.QPixmap())
-                self.ui.delete_0.hide()
-                self.ui.confirm_0.hide()
+        def load_clan_1(clan_1):
+            clan_1_response = requests.get(f'https://cocproxy.royaleapi.dev/v1/clans/%23{clan_1.lstrip("#")}', headers = headers)
+            if clan_1_response.status_code == 200:
+                clan_1_json = clan_1_response.json()
 
-        def load_clan_1():
-            try:
-                clan_1 = db.child('accounts').child(email.replace('.', '')).child('saved clans').child('savedclan1').child('tag').get().val()
+                self.ui.clan_name_1.setText(clan_1_json['name'])
+                self.ui.delete_1.show()
+                self.ui.confirm_1.show()
 
-                clan_1_response = requests.get('https://cocproxy.royaleapi.dev/v1/clans/%23' + clan_1, headers = headers)
-                if clan_1_response.status_code == 200:
-                    clan_1_json = clan_1_response.json()
+                image_1_response = requests.get(clan_1_json['badgeUrls']['large'])
 
-                    self.ui.clan_name_1.setText(clan_1_json['name'])
-                    self.ui.delete_1.show()
-                    self.ui.confirm_1.show()
+            if image_1_response.status_code == 200:
+                image_bytes = io.BytesIO(image_1_response.content)
+                img = Image.open(image_bytes)
+                qimage = ImageQt(img)
 
-                    image_1_response = requests.get(clan_1_json['badgeUrls']['large'])
+                self.ui.clan_shield_1.setPixmap(QtGui.QPixmap.fromImage(qimage))
+            else:
+                pass
 
-                if image_1_response.status_code == 200:
-                    image_bytes = io.BytesIO(image_1_response.content)
-                    img = Image.open(image_bytes)
-                    qimage = ImageQt(img)
+        def load_clan_2(clan_2):
+            clan_2_response = requests.get(f'https://cocproxy.royaleapi.dev/v1/clans/%23{clan_2.lstrip("#")}', headers = headers)
+            if clan_2_response.status_code == 200:
+                clan_2_json = clan_2_response.json()
 
-                    self.ui.clan_shield_1.setPixmap(QtGui.QPixmap.fromImage(qimage))
-                else:
-                    pass
-            except:
-                self.ui.clan_name_1.setText('')
-                self.ui.clan_shield_1.setPixmap(QtGui.QPixmap())
-                self.ui.delete_1.hide()
-                self.ui.confirm_1.hide()
+                self.ui.clan_name_2.setText(clan_2_json['name'])
+                self.ui.delete_2.show()
+                self.ui.confirm_2.show()
 
-        def load_clan_2():
-            try:
-                clan_2 = db.child('accounts').child(email.replace('.', '')).child('saved clans').child('savedclan2').child('tag').get().val()
+                image_2_response = requests.get(clan_2_json['badgeUrls']['large'])
 
-                clan_2_response = requests.get('https://cocproxy.royaleapi.dev/v1/clans/%23' + clan_2, headers = headers)
-                if clan_2_response.status_code == 200:
-                    clan_2_json = clan_2_response.json()
+            if image_2_response.status_code == 200:
+                image_bytes = io.BytesIO(image_2_response.content)
+                img = Image.open(image_bytes)
+                qimage = ImageQt(img)
 
-                    self.ui.clan_name_2.setText(clan_2_json['name'])
-                    self.ui.delete_2.show()
-                    self.ui.confirm_2.show()
+                self.ui.clan_shield_2.setPixmap(QtGui.QPixmap.fromImage(qimage))
+            else:
+                pass
 
-                    image_2_response = requests.get(clan_2_json['badgeUrls']['large'])
+        def load_clan_3(clan_3):
+            clan_3_response = requests.get(f'https://cocproxy.royaleapi.dev/v1/clans/%23{clan_3.lstrip("#")}', headers = headers)
+            if clan_3_response.status_code == 200:
+                clan_3_json = clan_3_response.json()
 
-                if image_2_response.status_code == 200:
-                    image_bytes = io.BytesIO(image_2_response.content)
-                    img = Image.open(image_bytes)
-                    qimage = ImageQt(img)
+                self.ui.clan_name_3.setText(clan_3_json['name'])
+                self.ui.delete_3.show()
+                self.ui.confirm_3.show()
 
-                    self.ui.clan_shield_2.setPixmap(QtGui.QPixmap.fromImage(qimage))
-                else:
-                    pass
-            except:
-                self.ui.clan_name_2.setText('')
-                self.ui.clan_shield_2.setPixmap(QtGui.QPixmap())
-                self.ui.delete_2.hide()
-                self.ui.confirm_2.hide()
+                image_3_response = requests.get(clan_3_json['badgeUrls']['large'])
 
-        def load_clan_3():
-            try:
-                clan_3 = db.child('accounts').child(email.replace('.', '')).child('saved clans').child('savedclan3').child('tag').get().val()
+            if image_3_response.status_code == 200:
+                image_bytes = io.BytesIO(image_3_response.content)
+                img = Image.open(image_bytes)
+                qimage = ImageQt(img)
 
-                clan_3_response = requests.get('https://cocproxy.royaleapi.dev/v1/clans/%23' + clan_3, headers = headers)
-                if clan_3_response.status_code == 200:
-                    clan_3_json = clan_3_response.json()
+                self.ui.clan_shield_3.setPixmap(QtGui.QPixmap.fromImage(qimage))
+            else:
+                pass
 
-                    self.ui.clan_name_3.setText(clan_3_json['name'])
-                    self.ui.delete_3.show()
-                    self.ui.confirm_3.show()
+        def load_clan_4(clan_4):
+            clan_4_response = requests.get(f'https://cocproxy.royaleapi.dev/v1/clans/%23{clan_4.lstrip("#")}', headers = headers)
+            if clan_4_response.status_code == 200:
+                clan_4_json = clan_4_response.json()
 
-                    image_3_response = requests.get(clan_3_json['badgeUrls']['large'])
+                self.ui.clan_name_4.setText(clan_4_json['name'])
+                self.ui.delete_4.show()
+                self.ui.confirm_4.show()
 
-                if image_3_response.status_code == 200:
-                    image_bytes = io.BytesIO(image_3_response.content)
-                    img = Image.open(image_bytes)
-                    qimage = ImageQt(img)
+                image_4_response = requests.get(clan_4_json['badgeUrls']['large'])
 
-                    self.ui.clan_shield_3.setPixmap(QtGui.QPixmap.fromImage(qimage))
-                else:
-                    pass
-            except:
-                self.ui.clan_name_3.setText('')
-                self.ui.clan_shield_3.setPixmap(QtGui.QPixmap())
-                self.ui.delete_3.hide()
-                self.ui.confirm_3.hide()
+            if image_4_response.status_code == 200:
+                image_bytes = io.BytesIO(image_4_response.content)
+                img = Image.open(image_bytes)
+                qimage = ImageQt(img)
 
-        def load_clan_4():
-            try:
-                clan_4 = db.child('accounts').child(email.replace('.', '')).child('saved clans').child('savedclan4').child('tag').get().val()
+                self.ui.clan_shield_4.setPixmap(QtGui.QPixmap.fromImage(qimage))
+            else:
+                pass
 
-                clan_4_response = requests.get('https://cocproxy.royaleapi.dev/v1/clans/%23' + clan_4, headers = headers)
-                if clan_4_response.status_code == 200:
-                    clan_4_json = clan_4_response.json()
-
-                    self.ui.clan_name_4.setText(clan_4_json['name'])
-                    self.ui.delete_4.show()
-                    self.ui.confirm_4.show()
-
-                    image_4_response = requests.get(clan_4_json['badgeUrls']['large'])
-
-                if image_4_response.status_code == 200:
-                    image_bytes = io.BytesIO(image_4_response.content)
-                    img = Image.open(image_bytes)
-                    qimage = ImageQt(img)
-
-                    self.ui.clan_shield_4.setPixmap(QtGui.QPixmap.fromImage(qimage))
-                else:
-                    pass
-            except:
-                self.ui.clan_name_4.setText('')
-                self.ui.clan_shield_4.setPixmap(QtGui.QPixmap())
-                self.ui.delete_4.hide()
-                self.ui.confirm_4.hide()
-
-        t1 = threading.Thread(target=load_clan_0)
-        t2 = threading.Thread(target=load_clan_1)
-        t3 = threading.Thread(target=load_clan_2)
-        t4 = threading.Thread(target=load_clan_3)
-        t5 = threading.Thread(target=load_clan_4)
-
-        t1.start()
-        t2.start()
-        t3.start()
-        t4.start()
-        t5.start()
-
-        t1.join()
-        t2.join()
-        t3.join()
-        t4.join()
-        t5.join()
+        cursor.execute("SELECT c.tag FROM users u "
+                        "JOIN user_clans "
+                            "USING (user_id) "
+                        "JOIN clans c "
+                            "USING(clan_id) "
+                        f"WHERE email = '{email}' "
+                        "ORDER BY c.name ")
+        
+        user_clans = []
+        for clan in cursor:
+            user_clans.append(clan[0])
+        
+        try:
+            threading.Thread(target=load_clan_0, args=[user_clans[0]]).start()
+        except:
+            self.ui.clan_name_0.setText('')
+            self.ui.clan_shield_0.setPixmap(QtGui.QPixmap())
+            self.ui.delete_0.hide()
+            self.ui.confirm_0.hide()
+        try:
+            threading.Thread(target=load_clan_1, args=[user_clans[1]]).start()
+        except:
+            self.ui.clan_name_1.setText('')
+            self.ui.clan_shield_1.setPixmap(QtGui.QPixmap())
+            self.ui.delete_1.hide()
+            self.ui.confirm_1.hide()
+        try:
+            threading.Thread(target=load_clan_2, args=[user_clans[2]]).start()
+        except:
+            self.ui.clan_name_2.setText('')
+            self.ui.clan_shield_2.setPixmap(QtGui.QPixmap())
+            self.ui.delete_2.hide()
+            self.ui.confirm_2.hide()
+        try:
+            threading.Thread(target=load_clan_3, args=[user_clans[3]]).start()
+        except:
+            self.ui.clan_name_3.setText('')
+            self.ui.clan_shield_3.setPixmap(QtGui.QPixmap())
+            self.ui.delete_3.hide()
+            self.ui.confirm_3.hide()
+        try:
+            threading.Thread(target=load_clan_4, args=[user_clans[4]]).start()
+        except:
+            self.ui.clan_name_4.setText('')
+            self.ui.clan_shield_4.setPixmap(QtGui.QPixmap())
+            self.ui.delete_4.hide()
+            self.ui.confirm_4.hide()
 
     def remove_clans(self, line_number):
 
-        db.child('accounts').child(email.replace('.', '')).child('saved clans').child('savedclan' + str(line_number)).remove()
-
-        clans_left = []
-
-        try:
-            clans_left.append(db.child('accounts').child(email.replace('.', '')).child('saved clans').get().val()['savedclan0'])
-        except:
-            pass
-        try:
-            clans_left.append(db.child('accounts').child(email.replace('.', '')).child('saved clans').get().val()['savedclan1'])
-        except:
-            pass
-        try:
-            clans_left.append(db.child('accounts').child(email.replace('.', '')).child('saved clans').get().val()['savedclan2'])
-        except:
-            pass
-        try:
-            clans_left.append(db.child('accounts').child(email.replace('.', '')).child('saved clans').get().val()['savedclan3'])
-        except:
-            pass
-        try:
-            clans_left.append(db.child('accounts').child(email.replace('.', '')).child('saved clans').get().val()['savedclan4'])
-        except:
-            pass
-
-        count = 0
-
-        for _ in range(5):
-            try:
-                current_clan = 'savedclan' + str(count)
-                data = {current_clan: clans_left[count]}
-                db.child('accounts').child(email.replace('.', '')).child('saved clans').update(data)
-            except:
-                db.child('accounts').child(email.replace('.', '')).child('saved clans').child(current_clan).remove()
-
-            count = count + 1
+        cursor.execute("SELECT c.clan_id FROM users u "
+                        "JOIN user_clans "
+                            "USING (user_id) "
+                        "JOIN clans c "
+                            "USING(clan_id) "
+                        f"WHERE email = '{email}' "
+                        "ORDER BY c.name "
+                        f"LIMIT 1 OFFSET {line_number}")
+        
+        for clan in cursor:
+            deleted_clan = clan[0]
+        
+        cursor.execute(f'DELETE FROM user_clans WHERE clan_id = {deleted_clan}')
+        mysql_db.commit()
 
         self.load_clans()
 
@@ -649,44 +634,37 @@ class AddClanScreen(QtWidgets.QMainWindow):
         group.addAnimation(add_clan_box_animation)
         group.start(QtCore.QAbstractAnimation.DeleteWhenStopped)
 
-        clan_tag = self.ui.clan_entry.text().lstrip('#')
+        clan_tag = self.ui.clan_entry.text()
+
+        response = requests.get(f'https://cocproxy.royaleapi.dev/v1/clans/%23{clan_tag.lstrip("#")}', headers=headers)
+        if response.status_code == 200:
+            response_json = response.json()
+            clan_name = response_json['name']
 
         try:
-            if len(db.child('accounts').child(email.replace('.', '')).child('saved clans').get().val()) < 5:
-
-                def repeat_local_clan():
-                    for i in range(len(db.child('accounts').child(email.replace('.', '')).child('saved clans').get().val())):
-                        if db.child('accounts').child(email.replace('.', '')).child('saved clans').child('savedclan' + str(i)).child('tag').get().val() == clan_tag:
-                            return True
-                    return False
-
-                if repeat_local_clan() == False:
-                    clan_number = len(db.child('accounts').child(email.replace('.', '')).child('saved clans').get().val())
-                    clan_name = 'savedclan' + str(clan_number)
-
-                    data = {'tag': clan_tag}
-
-                    db.child('accounts').child(email.replace('.', '')).child('saved clans').child(clan_name).set(data)
+            cursor.execute(f"INSERT INTO clans (tag, name) VALUES ('{clan_tag}', '{clan_name}')")
+            mysql_db.commit()
         except:
-            clan_name = 'savedclan0'
-
-            data = {'tag': clan_tag}
-
-            db.child('accounts').child(email.replace('.', '')).child('saved clans').child(clan_name).set(data)
+            pass
         
-        try:
-            clan_number = len(db.child('clans').get().val())
-        except:
-            clan_number = 0
-
-        def repeat_global_clan():
-            for i in range(clan_number):
-                if db.child('clans').child(str(i)).child('tag').get().val() == clan_tag:
-                    return True
-            return False
+        cursor.execute(f"SELECT clan_id FROM clans WHERE tag = '{clan_tag}'")
+        for id in cursor:
+            clan_id = int(id[0])
+        cursor.execute(f"SELECT user_id FROM users WHERE email = '{email}'")
+        for id in cursor:
+            user_id = int(id[0])
         
-        if repeat_global_clan() == False:
-            db.child('clans').child(clan_number).set({'tag': clan_tag})
+        cursor.execute(f"SELECT clan_id FROM user_clans WHERE user_id = {user_id}")
+        total_clans = []
+        for clan in cursor:
+            total_clans.append(clan[0])
+        
+        if len(total_clans) < 5:      
+            try:
+                cursor.execute(f"INSERT INTO user_clans (user_id, clan_id) VALUES ({user_id}, {clan_id})")
+                mysql_db.commit()
+            except:
+                pass
 
         self.load_clans()
         self.ui.clan_entry.setText('#')
