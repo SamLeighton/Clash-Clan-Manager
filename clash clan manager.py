@@ -18,6 +18,8 @@ from dateutil import parser
 import concurrent.futures
 import webbrowser
 import mysql.connector
+import coc
+import asyncio
 
 from PIL import *
 from PIL.ImageQt import ImageQt, QPixmap
@@ -38,7 +40,7 @@ clan_name = ''
 loop_closed = False
 
 mysql_db = mysql.connector.connect(host = mysql_info['host'], user = mysql_info['user'], passwd = mysql_info['password'], database = mysql_info['database'])
-cursor = mysql_db.cursor()
+cursor = mysql_db.cursor(prepared=True)
 
 firebase = pyrebase.initialize_app(firebase_config)
 auth = firebase.auth()
@@ -147,7 +149,12 @@ class TitleScreen(QtWidgets.QMainWindow):
         try:
             auth.sign_in_with_email_and_password(email, password)
 
-            cursor.execute(f"SELECT username FROM users WHERE email = '{email}'")
+            query = "SELECT username FROM users WHERE email = %s"
+
+            values = tuple((email,))
+
+            cursor.execute(query, values)
+            
             for user in cursor:
                 username = user[0]
 
@@ -215,7 +222,13 @@ class TitleScreen(QtWidgets.QMainWindow):
                 if len(password) >= 6:
                     try:
                         auth.create_user_with_email_and_password(email, password)
-                        cursor.execute(f"INSERT INTO users (email, username) VALUES ('{email}', '{username}')")
+
+                        query = "INSERT INTO users (email, username) VALUES (%s, %s)"
+
+                        values = (email, username)
+
+                        cursor.execute(query, values)
+
                         mysql_db.commit()
 
                         self.ui.username_entry.setText('')
@@ -313,14 +326,18 @@ class AddClanScreen(QtWidgets.QMainWindow):
     def select_clan(self, clan_number):
         global clan_name
 
-        cursor.execute("SELECT c.tag FROM users u "
-                        "JOIN user_clans "
-                            "USING (user_id) "
-                        "JOIN clans c "
-                            "USING(clan_id) "
-                        f"WHERE email = '{email}' "
-                        "ORDER BY c.name "
-                        f"LIMIT 1 OFFSET {clan_number}")
+        query = """SELECT c.tag FROM users u
+                        JOIN user_clans
+                            USING (user_id)
+                        JOIN clans c
+                            USING(clan_id)
+                        WHERE email = %s
+                        ORDER BY c.name
+                        LIMIT 1 OFFSET %s"""
+
+        values = (email, clan_number)
+
+        cursor.execute(query, values)
         
         for clan in cursor:
             clan_name = clan[0].lstrip('#')
@@ -494,13 +511,17 @@ class AddClanScreen(QtWidgets.QMainWindow):
             else:
                 pass
 
-        cursor.execute("SELECT c.tag FROM users u "
-                        "JOIN user_clans "
-                            "USING (user_id) "
-                        "JOIN clans c "
-                            "USING(clan_id) "
-                        f"WHERE email = '{email}' "
-                        "ORDER BY c.name ")
+        query = """SELECT c.tag FROM users u
+                        JOIN user_clans
+                            USING (user_id)
+                        JOIN clans c
+                            USING(clan_id)
+                        WHERE email = %s
+                        ORDER BY c.name"""
+
+        values = tuple((email,))
+
+        cursor.execute(query, values)
         
         user_clans = []
         for clan in cursor:
@@ -544,19 +565,23 @@ class AddClanScreen(QtWidgets.QMainWindow):
 
     def remove_clans(self, line_number):
 
-        cursor.execute("SELECT c.clan_id FROM users u "
-                        "JOIN user_clans "
-                            "USING (user_id) "
-                        "JOIN clans c "
-                            "USING(clan_id) "
-                        f"WHERE email = '{email}' "
-                        "ORDER BY c.name "
-                        f"LIMIT 1 OFFSET {line_number}")
+        query = """SELECT c.clan_id FROM users u
+                        JOIN user_clans
+                            USING (user_id)
+                        JOIN clans c
+                            USING(clan_id)
+                        WHERE email = %s
+                        ORDER BY c.name
+                        LIMIT 1 OFFSET %s"""
+
+        values = (email, line_number)
         
         for clan in cursor:
             deleted_clan = clan[0]
         
-        cursor.execute(f'DELETE FROM user_clans WHERE clan_id = {deleted_clan}')
+        query = """DELETE FROM user_clans WHERE clan_id = %s"""
+        values = tuple((deleted_clan,))
+        cursor.execute(query, values)
         mysql_db.commit()
 
         self.load_clans()
@@ -641,27 +666,39 @@ class AddClanScreen(QtWidgets.QMainWindow):
             response_json = response.json()
             clan_name = response_json['name']
 
+            clan_tag = '#' + clan_tag.lstrip('#')
+
         try:
-            cursor.execute(f"INSERT INTO clans (tag, name) VALUES ('{clan_tag}', '{clan_name}')")
+            query = """INSERT INTO clans (tag, name) VALUES (%s, %s)"""
+            values = (clan_tag, clan_name)
+            cursor.execute(query, values)
             mysql_db.commit()
         except:
             pass
         
-        cursor.execute(f"SELECT clan_id FROM clans WHERE tag = '{clan_tag}'")
+        query = """SELECT clan_id FROM clans WHERE tag = %s"""
+        values = tuple((clan_tag,))
+        cursor.execute(query, values)
         for id in cursor:
             clan_id = int(id[0])
-        cursor.execute(f"SELECT user_id FROM users WHERE email = '{email}'")
+        query = """SELECT user_id FROM users WHERE email = %s"""
+        values = tuple((email,))
+        cursor.execute(query, values)
         for id in cursor:
             user_id = int(id[0])
         
-        cursor.execute(f"SELECT clan_id FROM user_clans WHERE user_id = {user_id}")
+        query = """SELECT clan_id FROM user_clans WHERE user_id = %s"""
+        values = tuple((user_id,))
+        cursor.execute(query, values)
         total_clans = []
         for clan in cursor:
             total_clans.append(clan[0])
         
-        if len(total_clans) < 5:      
+        if len(total_clans) < 5:
             try:
-                cursor.execute(f"INSERT INTO user_clans (user_id, clan_id) VALUES ({user_id}, {clan_id})")
+                query = """INSERT INTO user_clans (user_id, clan_id) VALUES (%s, %s)"""
+                values = (user_id, clan_id)
+                cursor.execute(query, values)
                 mysql_db.commit()
             except:
                 pass
@@ -1574,14 +1611,16 @@ class warCwlScreen(QtWidgets.QMainWindow):
         self.show_war_participants(response_json, participants)
     
     def show_more_participant_information(self, participants, status, index):
-        all_users = db.child('users').get().val()
         player = participants[status][index]
-        player_tag = participants[status][index]['tag'].lstrip('#')
+        player_tag = participants[status][index]['tag']
 
-        for user in all_users:
-            if user['tag'] == player_tag:
-                user_db = user
-                break
+        query = f"""SELECT player_id FROM players
+                        WHERE player_tag = '{player_tag}'"""
+
+        cursor.execute(query)
+
+        for item in cursor:
+            player_id = item[0]
 
         self.ui.participant_name.setText(player['name'])
         
@@ -1705,11 +1744,6 @@ class warCwlScreen(QtWidgets.QMainWindow):
             self.ui.best_defence_star_image.hide()
 
         try: #previous war stats
-      
-            if len(user_db['warstats']) <= 7:
-                loop_number = len(user['warstats'])
-            else:
-                loop_number = 7
             
             total_stars = 0
             total_percent = 0
@@ -1717,44 +1751,85 @@ class warCwlScreen(QtWidgets.QMainWindow):
             total_defence_stars = 0
             total_defence_percent = 0
 
-            total_dips = 0
+            total_player_town_hall = 0
+            total_opponent_town_hall = 0
             missed_hits = 0
 
             total_attacks = 0
+            total_defences = 0
 
-            for war in list(reversed(user_db['warstats'])):
-                total_stars += war['total_stars']
-                total_percent += war['total_percent']
+            war_ids = set()
 
-                total_defence_stars += war['defence_stars']
-                total_defence_percent += war['defence_percent']
+            try:
+                query = f"""SELECT war_id, stars, percent, player_town_hall, opponent_town_hall FROM player_attacks
+                            WHERE player_id = {player_id}"""
 
-                total_dips += war['dips']
-                missed_hits += war['missed_hits']
+                cursor.execute(query)
 
-                try:
-                    total_attacks += len(war['attacks'])
-                except:
-                    pass
+                for attack in cursor:
+                    war_ids.add(attack[0])
+                    total_stars += attack[1]
+                    total_percent += attack[2]
+                    total_player_town_hall += attack[3]
+                    total_opponent_town_hall += attack[4]
+
+                    total_attacks += 1
+
+                    if len(war_ids) == 7:
+                        break
+            except:
+                pass
+            
+            try:
+                query = f""""SELECT war_id, missed_hits FROM missed_hits
+                                WHERE player_id = {player_id}"""
+                
+                cursor.execute(query)
+
+                for missed in cursor:
+                    war_id = missed[0]
+
+                    if war_id in war_ids:
+                        missed_hits += missed[1]
+            except:
+                missed_hits = 0
+            
+            try:
+                query = f"""SELECT war_id, stars, percent FROM player_attacks
+                                WHERE opponent_id = {player_id}"""
+
+                cursor.execute(query)
+
+                for attack in cursor:
+                    war_id = attack[0]
+                    if war_id in war_ids:
+                        total_defence_stars += attack[1]
+                        total_defence_percent += attack[2]
+
+                        total_defences += 1
+            except:
+                pass
+
+            
+            total_dips = total_player_town_hall - total_opponent_town_hall
             
             if total_attacks > 0:
                 average_stars = round(total_stars / total_attacks, 2)
                 average_percent = round(total_percent / total_attacks, 2)
-
-                average_defence_stars = round(total_defence_stars / total_attacks, 2)
-                average_defence_percent = round(total_defence_percent / total_attacks, 2)
-
                 average_dips = round(total_dips / total_attacks, 2)
             else:
                 average_stars = 0
                 average_percent = 0
+                average_dips = 0
 
+            if total_defences > 0:
+                average_defence_stars = round(total_defence_stars / total_defences, 2)
+                average_defence_percent = round(total_defence_percent / total_defences, 2)
+            else:
                 average_defence_stars = 0
                 average_defence_percent = 0
 
-                average_dips = 0
-
-            self.ui.previous_wars_label.setText(f'Previous {loop_number} War Stats')
+            self.ui.previous_wars_label.setText(f'Previous {len(war_ids)} War Stats')
             self.ui.average_stars.setText(f'Average Stars: {average_stars}')
             self.ui.average_percent.setText(f'Average Percent: {average_percent}%')
             self.ui.average_defence_stars.setText(f'Average Defence Stars: {average_defence_stars}')
